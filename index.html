@@ -373,6 +373,8 @@
             display: none;
             border: 1px solid;
             transition: all 0.3s;
+            max-height: 220px;
+            overflow-y: auto;
         }
 
         .result-box.safe {
@@ -936,9 +938,14 @@
                     } else {
                         resultBox.className = 'result-box safe';
                         document.getElementById('resultLabel').textContent = '✅ PASS — 정상 처리 완료';
-                        document.getElementById('resultText').textContent = data.final_result;
+                        const totalLen = data.final_result.length;
+                        const preview = data.final_result.slice(0, 500);
+                        const previewText = totalLen > 500
+                            ? `${preview}\n\n... (총 ${totalLen.toLocaleString()}자, 앞 500자 미리보기)`
+                            : preview;
+                        document.getElementById('resultText').textContent = previewText || '(정제된 텍스트 없음)';
                         statusDot.className = 'status-dot';
-                        statusText.textContent = '정상 완료 — 모든 레이어 통과';
+                        statusText.textContent = `정상 완료 — 모든 레이어 통과 (${totalLen.toLocaleString()}자 정제됨)`;
                         statusText.style.color = 'var(--success)';
 
                         // 첫 번째 프롬프트를 챗 히스토리에 누적
